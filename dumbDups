@@ -1,0 +1,21 @@
+#! /usr/bin/env bash
+# finds duplicates in files matching regex passed as arg 1
+# it's dumb
+
+if [ $# -ne 1 ];then
+  &2 echo "must have 1 argument of possible files"
+fi
+
+files=$(find . -name $1)
+
+for file in $files;do
+    for comp in $files;do
+        #  echo $file $comp
+        if [ $file != $comp ];then
+            res=$(diff $file $comp)
+            if [ $? -eq 0 ]; then
+                echo $file and $comp match
+            fi
+        fi
+    done
+done
