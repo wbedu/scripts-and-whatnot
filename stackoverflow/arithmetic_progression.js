@@ -19,4 +19,3 @@ const progress = (start, end, length) =>{
 let arr = progress(100, 10, 10);
 
 arr.forEach(elem =>console.log(elem));
-@wbedu
