@@ -1,3 +1,12 @@
+ comparing run time for array.concat VS array.forEach when building a new array.
+ 
+ Is it overcomplicated? yes
+ 
+ is it accurate? I sure hope so
+
+|
+
+|
 ### Trail Results for 5 Rounds, 10000000 array length
 |index  | forEachTime | concatTime|
 | :--:  | :--:        |   :---:   |
