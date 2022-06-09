@@ -1,0 +1,25 @@
+/* istanbul ignore file */
+
+import React, { SVGProps } from 'react';
+
+const {{componentName}} = ({
+    fill = "#FFFFFF",
+    width = "27",
+    height = "27",
+    ...props
+}: SVGProps<SVGSVGElement>) => (
+    <svg
+        version="1.1"
+        xmlns="http://www.w3.org/2000/svg"
+        width={width}
+        height={height}
+        {...props}
+        viewBox={`0 0 32 32`}
+    >
+
+        {% for data in pathDataSet -%}
+                <path d="{{data}}" fill={fill}></path>
+        {% endfor +%}
+    </svg>
+)
+export default {{componentName}};
