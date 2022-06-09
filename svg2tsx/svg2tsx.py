@@ -1,8 +1,12 @@
 #! /usr/bin/env python3
+# converts an svg into a react component
+
 import sys
 from bs4 import BeautifulSoup
 from jinja2 import Environment, FileSystemLoader
 from pathlib import Path
+
+
 def parse_svg(file_name):
     data = None
     with open(file_name, 'r') as svgFile:
@@ -11,8 +15,6 @@ def parse_svg(file_name):
 
 
 def transform(pathsData, componentName):
-    # Create the jinja2 environment.
-    # Notice the use of trim_blocks, which greatly helps control whitespace.
     j2_env = Environment(loader=FileSystemLoader("./icon_template.tsx"),
                          trim_blocks=True)
 
