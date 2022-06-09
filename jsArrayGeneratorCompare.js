@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /*
 * comparing run time for
 * array.concat VS array.forEach
