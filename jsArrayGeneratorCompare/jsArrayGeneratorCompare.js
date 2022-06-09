@@ -31,7 +31,7 @@ function trial(length) {
 }
 
 const rounds = Array.from(
-  { length: 5 },
+  { length: totalRounds },
   (item, index) => item = index + 1,
 );
 
