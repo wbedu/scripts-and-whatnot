@@ -20,10 +20,9 @@ IFS=',' read -ra hosts_array <<< "$valid_hosts"
 for item in "${hosts_array[@]}"; do
     # check if we're connecting to host from desired public ip
     if [ "$item" = "$value_to_check" ]; then
-        echo $item is a match
         public_ip=$(ssh jumphost "echo \$SSH_CONNECTION | awk '{print \$1}'")
         if [ "$public_ip" = $ip_to_test ]; then
-        	# local no use proxy
+        	# don't use proxy
         	exit 0
         fi
         break
