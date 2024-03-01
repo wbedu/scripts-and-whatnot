@@ -18,7 +18,7 @@ valid_hosts="$3"
 IFS=',' read -ra hosts_array <<< "$valid_hosts"
 
 for item in "${hosts_array[@]}"; do
-    echo $item
+    # check if we're connecting to host from desired public ip
     if [ "$item" = "$value_to_check" ]; then
         echo $item is a match
         public_ip=$(ssh jumphost "echo \$SSH_CONNECTION | awk '{print \$1}'")
