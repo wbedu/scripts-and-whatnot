@@ -28,23 +28,20 @@ class Item:
 
 
 class Bag:
-    def __init__(self, capacity) -> None:
+    def __init__(self, maxCapacity) -> None:
         self._stored: List[Item] = []
-        self._capacity: int = capacity
+        self._capacity: int = maxCapacity
+        self._value: int = 0
+        self._filled: int = 0
 
     def addItem(self, item: Item):
-        if item.weight > self.capacity:
+        if item.weight > self.remainingCapacity:
             raise ValueError(
-                f"Incomming item weight ({item.weight}) is greater than capacity ({self.capacity})"
+                f"Incomming item weight ({item.weight}) is greater than capacity ({self.remainingCapacity})"
             )
-        # Will throw even if two distinct items have the same name
-        # not in scope for this exercise
-        if self.isContainsItem(item):
-            raise AssertionError("Cannot have the same item more than once")
         self._stored.append(item)
-
-    def isContainsItem(self, item: Item):
-        return item.name in [i.name for i in self.stored]
+        self._filled += item.weight
+        self._value += item.value
 
     @property
     def stored(self):
@@ -52,14 +49,14 @@ class Bag:
 
     @property
     def value(self):
-        return sum([item.value for item in self.stored])
+        return self._value
 
     @property
     def filled(self):
-        return sum([item.weight for item in self.stored])
+        return self._filled
 
     @property
-    def capacity(self):
+    def remainingCapacity(self):
         return self._capacity - self.filled
 
     def __str__(self) -> str:
@@ -71,30 +68,35 @@ def knapsack(items: Dict, maxWeight: int) -> List[List[Bag]]:
         Item(name, items[name]["weight"], items[name]["value"]) for name in items.keys()
     ]
     bagMaxIndex = maxWeight + 1
-    itemMaxIndex = len(itemsArr)
 
     # create matrix of empty bags with associated capacity
-    m = [
-        [Bag(capacity) for capacity in range(1, maxWeight + 1)]
-        for _ in range(0, itemMaxIndex)
-    ]
+    m: List[List[Bag]] = []
 
-    for curItemIdx, row in enumerate(m):
-        curItemValue = itemsArr[curItemIdx]
-        prevIdx = curItemIdx - 1
-        for curBagIdx, curBagValue in enumerate(row):
-            if curBagValue.capacity >= curItemValue.weight:
-                curBagValue.addItem(curItemValue)
-            if curBagValue.capacity:
-                closestMatchBag = m[prevIdx][curBagValue.capacity - 1]
-                for item in closestMatchBag.stored:
-                    curBagValue.addItem(item)
+    prevRow = [Bag(capacity) for capacity in range(1, bagMaxIndex)]
+
+    for curItemIdx, curItem in enumerate(itemsArr):
+        newRow = []
+
+        for curBagIdx, curBagCapacity in enumerate(range(1, bagMaxIndex)):
+            if curBagCapacity < curItem.weight:
+                newRow.append(prevRow[curBagIdx])
+                continue
+
+            curBag = Bag(curBagCapacity)
+            curBag.addItem(curItem)
+
+            if curBag.remainingCapacity:
+                remainderBag = prevRow[curBag.remainingCapacity - 1]
+                for item in remainderBag.stored:
+                    curBag.addItem(item)
 
             # ternary would look cooler but would make reading more difficult
-            if m[prevIdx][curBagIdx].value < curBagValue.value:
-                m[curItemIdx][curBagIdx] = curBagValue
+            if prevRow[curBagIdx].value < curBag.value:
+                newRow.append(curBag)
             else:
-                m[curItemIdx][curBagIdx] = m[prevIdx][curBagIdx]
+                newRow.append(prevRow[curBagIdx])
+        m.append(newRow)
+        prevRow = newRow
     return m
 
 
